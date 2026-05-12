@@ -1,10 +1,12 @@
 package com.academicsystem.auth_service.service;
 
 import com.academicsystem.auth_service.dto.*;
-import com.academicsystem.auth_service.entity.User;
-import com.academicsystem.auth_service.repository.UserRepository;
+import com.academicsystem.auth_service.entity.UserAccount;
+import com.academicsystem.auth_service.repository.UserAccountRepository;
 import com.academicsystem.auth_service.security.JwtService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.authentication.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
+    private final UserAccountRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -25,17 +27,22 @@ public class AuthService {
 
         if (userRepository.existsByEmail(request.getEmail())) {
 
-            throw new RuntimeException("Email already exists");
+            throw new RuntimeException(
+                    "Email already exists"
+            );
         }
 
-        User user = User.builder()
+        UserAccount user = UserAccount.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(
-                        passwordEncoder.encode(request.getPassword())
+                        passwordEncoder.encode(
+                                request.getPassword()
+                        )
                 )
                 .role(request.getRole())
+                .enabled(true)
                 .build();
 
         userRepository.save(user);
@@ -57,9 +64,14 @@ public class AuthService {
                 )
         );
 
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() ->
-                        new RuntimeException("User not found"));
+        UserAccount user =
+                userRepository.findByEmail(
+                        request.getEmail()
+                ).orElseThrow(() ->
+                        new RuntimeException(
+                                "User not found"
+                        )
+                );
 
         String token = jwtService.generateToken(user);
 
@@ -74,9 +86,13 @@ public class AuthService {
         String email =
                 jwtService.extractUsername(token);
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new RuntimeException("User not found"));
+        UserAccount user =
+                userRepository.findByEmail(email)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "User not found"
+                                )
+                        );
 
         return ProfileResponse.builder()
                 .id(user.getId())
@@ -95,15 +111,21 @@ public class AuthService {
         String email =
                 jwtService.extractUsername(token);
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new RuntimeException("User not found"));
+        UserAccount user =
+                userRepository.findByEmail(email)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "User not found"
+                                )
+                        );
 
         user.setFirstName(request.getFirstName());
+
         user.setLastName(request.getLastName());
+
         user.setEmail(request.getEmail());
 
-        User updatedUser =
+        UserAccount updatedUser =
                 userRepository.save(user);
 
         return ProfileResponse.builder()
@@ -114,4 +136,159 @@ public class AuthService {
                 .role(updatedUser.getRole())
                 .build();
     }
+
+    public CreateAccountResponse createInternalAccount(
+            CreateAccountRequest request
+    ) {
+
+        if (userRepository.existsByEmail(
+                request.email()
+        )) {
+
+            throw new RuntimeException(
+                    "Email already exists"
+            );
+        }
+
+        UserAccount user = UserAccount.builder()
+                .email(request.email())
+                .password(
+                        passwordEncoder.encode(
+                                request.password()
+                        )
+                )
+                .role(request.role())
+                .enabled(true)
+                .build();
+
+        UserAccount saved =
+                userRepository.save(user);
+
+        return new CreateAccountResponse(
+                saved.getId(),
+                saved.getEmail(),
+                saved.getRole().name()
+        );
+    }
 }
+
+
+
+//package com.academicsystem.auth_service.service;
+//
+//import com.academicsystem.auth_service.dto.*;
+//import com.academicsystem.auth_service.entity.User;
+//import com.academicsystem.auth_service.repository.UserRepository;
+//import com.academicsystem.auth_service.security.JwtService;
+//import lombok.RequiredArgsConstructor;
+//import org.springframework.security.authentication.*;
+//import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.stereotype.Service;
+//
+//@Service
+//@RequiredArgsConstructor
+//public class AuthService {
+//
+//    private final UserRepository userRepository;
+//
+//    private final PasswordEncoder passwordEncoder;
+//
+//    private final JwtService jwtService;
+//
+//    private final AuthenticationManager authenticationManager;
+//
+//    public AuthResponse signup(RegisterRequest request) {
+//
+//        if (userRepository.existsByEmail(request.getEmail())) {
+//
+//            throw new RuntimeException("Email already exists");
+//        }
+//
+//        User user = User.builder()
+//                .firstName(request.getFirstName())
+//                .lastName(request.getLastName())
+//                .email(request.getEmail())
+//                .password(
+//                        passwordEncoder.encode(request.getPassword())
+//                )
+//                .role(request.getRole())
+//                .build();
+//
+//        userRepository.save(user);
+//
+//        String token = jwtService.generateToken(user);
+//
+//        return AuthResponse.builder()
+//                .token(token)
+//                .message("User registered successfully")
+//                .build();
+//    }
+//
+//    public AuthResponse login(LoginRequest request) {
+//
+//        authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        request.getEmail(),
+//                        request.getPassword()
+//                )
+//        );
+//
+//        User user = userRepository.findByEmail(request.getEmail())
+//                .orElseThrow(() ->
+//                        new RuntimeException("User not found"));
+//
+//        String token = jwtService.generateToken(user);
+//
+//        return AuthResponse.builder()
+//                .token(token)
+//                .message("Login successful")
+//                .build();
+//    }
+//
+//    public ProfileResponse getProfile(String token) {
+//
+//        String email =
+//                jwtService.extractUsername(token);
+//
+//        User user = userRepository.findByEmail(email)
+//                .orElseThrow(() ->
+//                        new RuntimeException("User not found"));
+//
+//        return ProfileResponse.builder()
+//                .id(user.getId())
+//                .firstName(user.getFirstName())
+//                .lastName(user.getLastName())
+//                .email(user.getEmail())
+//                .role(user.getRole())
+//                .build();
+//    }
+//
+//    public ProfileResponse updateProfile(
+//            String token,
+//            UpdateProfileRequest request
+//    ) {
+//
+//        String email =
+//                jwtService.extractUsername(token);
+//
+//        User user = userRepository.findByEmail(email)
+//                .orElseThrow(() ->
+//                        new RuntimeException("User not found"));
+//
+//        user.setFirstName(request.getFirstName());
+//        user.setLastName(request.getLastName());
+//        user.setEmail(request.getEmail());
+//
+//        User updatedUser =
+//                userRepository.save(user);
+//
+//        return ProfileResponse.builder()
+//                .id(updatedUser.getId())
+//                .firstName(updatedUser.getFirstName())
+//                .lastName(updatedUser.getLastName())
+//                .email(updatedUser.getEmail())
+//                .role(updatedUser.getRole())
+//                .build();
+//    }
+//
+//}

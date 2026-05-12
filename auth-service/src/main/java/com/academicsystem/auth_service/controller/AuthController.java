@@ -2,6 +2,7 @@ package com.academicsystem.auth_service.controller;
 
 import com.academicsystem.auth_service.dto.*;
 import com.academicsystem.auth_service.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -84,5 +85,19 @@ public class AuthController {
         response.put("role", role);
 
         return response;
+    }
+
+    @PostMapping("/internal/create-account")
+    public ResponseEntity<CreateAccountResponse>
+    createInternalAccount(
+
+            @RequestBody
+            @Valid
+            CreateAccountRequest request
+    ) {
+
+        return ResponseEntity.ok(
+                authService.createInternalAccount(request)
+        );
     }
 }

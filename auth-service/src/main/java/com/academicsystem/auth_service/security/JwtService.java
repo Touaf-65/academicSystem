@@ -1,6 +1,6 @@
 package com.academicsystem.auth_service.security;
 
-import com.academicsystem.auth_service.entity.User;
+import com.academicsystem.auth_service.entity.UserAccount;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class JwtService {
         );
     }
 
-    public String generateToken(User user) {
+    public String generateToken(UserAccount user) {
 
         Map<String, Object> claims = new HashMap<>();
 
