@@ -1,0 +1,47 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+
+        - id: department-service
+          uri: lb://department-service
+          predicates:
+            - Path=/departments/**
+
+        - id: teacher-service
+          uri: lb://teacher-service
+          predicates:
+            - Path=/teachers/**
+
+        - id: course-service
+          uri: lb://course-service
+          predicates:
+            - Path=/courses/**
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+
+  client:
+    service-url:
+      defaultZone: http://localhost:8771/eureka
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
