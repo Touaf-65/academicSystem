@@ -1,6 +1,9 @@
 server:
   port: 8093
 
+security:
+  internal-secret: my-super-internal-secret
+
 spring:
   application:
     name: teacher-service

@@ -2,27 +2,25 @@ package com.academicsystem.teacher_service.controller;
 
 import com.academicsystem.teacher_service.dto.CreateTeacherRequest;
 import com.academicsystem.teacher_service.dto.TeacherResponse;
-import com.academicsystem.teacher_service.service.TeacherService;
 
+import com.academicsystem.teacher_service.service.TeacherService;
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/teachers")
+@RequestMapping("/internal/departments")
 @RequiredArgsConstructor
-public class TeacherController {
+public class InternalTeacherController {
 
     private final TeacherService service;
 
-    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TeacherResponse create(
@@ -33,7 +31,6 @@ public class TeacherController {
         return service.create(request);
     }
 
-    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN','TEACHER')")
     @GetMapping("/{id}")
     public TeacherResponse getById(
             @PathVariable Long id
@@ -42,14 +39,12 @@ public class TeacherController {
         return service.getById(id);
     }
 
-    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN','TEACHER')")
     @GetMapping
     public List<TeacherResponse> getAll() {
 
         return service.getAll();
     }
 
-    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN')")
     @PutMapping("/{id}")
     public TeacherResponse update(
             @PathVariable Long id,
@@ -60,7 +55,6 @@ public class TeacherController {
         return service.update(id, request);
     }
 
-    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
