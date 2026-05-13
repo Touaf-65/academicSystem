@@ -1,0 +1,3 @@
+department-service\src\main\java\com\academicsystem\department_service\security\InternalAuthenticationFilter.java
+department-service\src\main\java\com\academicsystem\department_service\config\SecurityConfig_1.java
+department-service\src\main\java\com\academicsystem\department_service\controller\InternalDepartmentController.java
