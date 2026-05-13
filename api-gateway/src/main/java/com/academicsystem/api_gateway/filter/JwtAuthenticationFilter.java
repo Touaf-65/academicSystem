@@ -132,6 +132,10 @@ public class JwtAuthenticationFilter
                             .getHeaders()
             );
 
+            mutableHeaders.remove("X-User-Id");
+            mutableHeaders.remove("X-User-Email");
+            mutableHeaders.remove("X-User-Role");
+
             mutableHeaders.set(
                     "X-User-Id",
                     userId.toString()

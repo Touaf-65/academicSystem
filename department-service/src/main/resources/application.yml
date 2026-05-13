@@ -1,6 +1,9 @@
 server:
   port: 8092
 
+security:
+  internal-secret: my-super-internal-secret
+
 spring:
   application:
     name: department-service

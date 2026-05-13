@@ -10,19 +10,17 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/departments")
+@RequestMapping("/internal/departments")
 @RequiredArgsConstructor
-public class DepartmentController {
+public class InternalDepartmentController {
 
     private final DepartmentService service;
 
-    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public DepartmentResponse create(
@@ -33,7 +31,6 @@ public class DepartmentController {
         return service.create(request);
     }
 
-    @PreAuthorize("@roleSecurity.hasRole('ADMIN, TEACHER, STUDENT')")
     @GetMapping("/{id}")
     public DepartmentResponse getById(
             @PathVariable Long id
@@ -42,14 +39,12 @@ public class DepartmentController {
         return service.getById(id);
     }
 
-    @PreAuthorize("@roleSecurity.hasRole('ADMIN, TEACHER, STUDENT')")
     @GetMapping
     public List<DepartmentResponse> getAll() {
 
         return service.getAll();
     }
 
-    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @PutMapping("/{id}")
     public DepartmentResponse update(
             @PathVariable Long id,
@@ -60,7 +55,6 @@ public class DepartmentController {
         return service.update(id, request);
     }
 
-    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
