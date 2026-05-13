@@ -13,6 +13,9 @@ public record CreateTeacherRequest(
         @Email
         String email,
 
+        @NotBlank
+        String password,
+
         List<Long> departmentIds
 ) {
 }

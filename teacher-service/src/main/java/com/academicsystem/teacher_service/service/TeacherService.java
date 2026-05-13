@@ -1,5 +1,6 @@
 package com.academicsystem.teacher_service.service;
 
+import com.academicsystem.teacher_service.client.AuthClient;
 import com.academicsystem.teacher_service.dto.CreateTeacherRequest;
 import com.academicsystem.teacher_service.dto.TeacherResponse;
 

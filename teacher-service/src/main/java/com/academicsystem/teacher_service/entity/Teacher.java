@@ -27,9 +27,10 @@ public class Teacher {
     @Column(nullable = false, unique = true)
     private String email;
 
-    /*
-     * IDs des départements
-     */
+    @Column(nullable = false, unique = true)
+    private Long authUserId;
+
+
     @ElementCollection
     @CollectionTable(
             name = "teacher_departments",
@@ -39,9 +40,7 @@ public class Teacher {
     private List<Long> departmentIds =
             new ArrayList<>();
 
-    /*
-     * IDs des cours
-     */
+
     @ElementCollection
     @CollectionTable(
             name = "teacher_courses",

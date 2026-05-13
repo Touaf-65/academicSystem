@@ -1,8 +1,11 @@
 package com.academicsystem.teacher_service.service.impl;
 
+import com.academicsystem.teacher_service.client.AuthClient;
 import com.academicsystem.teacher_service.client.DepartmentClient;
 import com.academicsystem.teacher_service.dto.CreateTeacherRequest;
 import com.academicsystem.teacher_service.dto.TeacherResponse;
+import com.academicsystem.teacher_service.dto.auth.CreateAccountRequest;
+import com.academicsystem.teacher_service.dto.auth.CreateAccountResponse;
 import com.academicsystem.teacher_service.entity.Teacher;
 import com.academicsystem.teacher_service.repository.TeacherRepository;
 import com.academicsystem.teacher_service.service.TeacherService;
@@ -22,6 +25,9 @@ public class TeacherServiceImpl
 
     private final DepartmentClient departmentClient;
 
+    private final AuthClient authClient;
+
+
     @Override
     public TeacherResponse create(
             CreateTeacherRequest request
@@ -38,10 +44,21 @@ public class TeacherServiceImpl
                     );
         }
 
+        CreateAccountResponse authResponse =
+                authClient.createAccount(
+
+                        new CreateAccountRequest(
+                                request.email(),
+                                request.password(),
+                                "TEACHER"
+                        )
+                );
+
         Teacher teacher = Teacher.builder()
                 .nom(request.nom())
                 .email(request.email())
                 .departmentIds(request.departmentIds())
+                .authUserId(authResponse.id())
                 .build();
 
         Teacher saved = repository.save(teacher);
