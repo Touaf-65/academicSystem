@@ -33,7 +33,7 @@ public class TeacherController {
         return service.create(request);
     }
 
-    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN','TEACHER')")
+    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN','TEACHER', 'STUDENT')")
     @GetMapping("/{id}")
     public TeacherResponse getById(
             @PathVariable Long id

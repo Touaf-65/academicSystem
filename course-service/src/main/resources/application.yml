@@ -1,6 +1,9 @@
 server:
   port: 8094
 
+security:
+  internal-secret: my-super-internal-secret
+
 spring:
   application:
     name: course-service

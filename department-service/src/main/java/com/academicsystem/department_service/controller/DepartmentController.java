@@ -33,7 +33,7 @@ public class DepartmentController {
         return service.create(request);
     }
 
-    @PreAuthorize("@roleSecurity.hasRole('ADMIN, TEACHER, STUDENT')")
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN', 'TEACHER', 'STUDENT')")
     @GetMapping("/{id}")
     public DepartmentResponse getById(
             @PathVariable Long id
@@ -42,7 +42,7 @@ public class DepartmentController {
         return service.getById(id);
     }
 
-    @PreAuthorize("@roleSecurity.hasRole('ADMIN, TEACHER, STUDENT')")
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN', 'TEACHER', 'STUDENT')")
     @GetMapping
     public List<DepartmentResponse> getAll() {
 
