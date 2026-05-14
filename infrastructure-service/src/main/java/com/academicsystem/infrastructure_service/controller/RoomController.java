@@ -5,6 +5,7 @@ import com.academicsystem.infrastructure_service.dto.RoomResponse;
 import com.academicsystem.infrastructure_service.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class RoomController {
     private final RoomService roomService;
 
     @PostMapping
+    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN')")
     public ResponseEntity<RoomResponse> create(
             @RequestBody CreateRoomRequest request
     ) {
@@ -26,6 +28,7 @@ public class RoomController {
     }
 
     @GetMapping
+    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<List<RoomResponse>> getAll() {
 
         return ResponseEntity.ok(
@@ -34,6 +37,7 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<RoomResponse> getById(
             @PathVariable Long id
     ) {
@@ -44,6 +48,7 @@ public class RoomController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN')")
     public ResponseEntity<RoomResponse> update(
             @PathVariable Long id,
             @RequestBody CreateRoomRequest request
@@ -55,6 +60,7 @@ public class RoomController {
     }
 
     @GetMapping("/floor/{floorId}")
+    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<List<RoomResponse>> getByFloor(
             @PathVariable Long floorId
     ) {
@@ -64,6 +70,7 @@ public class RoomController {
     }
 
     @GetMapping("/building/{buildingId}")
+    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<List<RoomResponse>>
     getByBuilding(
             @PathVariable Long buildingId
@@ -75,6 +82,7 @@ public class RoomController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN')")
     public ResponseEntity<Void> delete(
             @PathVariable Long id
     ) {

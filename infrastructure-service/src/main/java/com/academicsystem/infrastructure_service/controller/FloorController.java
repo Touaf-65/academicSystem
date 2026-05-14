@@ -18,6 +18,7 @@ public class FloorController {
 
     private final FloorService floorService;
 
+    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN')")
     @PostMapping
     public ResponseEntity<FloorResponse> create(
             @RequestBody CreateFloorRequest request
@@ -28,6 +29,7 @@ public class FloorController {
     }
 
     @GetMapping
+    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<List<FloorResponse>> getAll() {
 
         return ResponseEntity.ok(
@@ -36,6 +38,7 @@ public class FloorController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<FloorResponse> getById(
             @PathVariable Long id
     ) {
@@ -46,6 +49,7 @@ public class FloorController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN')")
     public ResponseEntity<FloorResponse> update(
             @PathVariable Long id,
             @RequestBody CreateFloorRequest request
@@ -57,6 +61,7 @@ public class FloorController {
     }
 
     @GetMapping("/building/{buildingId}")
+    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<List<FloorResponse>> getByBuilding(
             @PathVariable Long buildingId
     ) {
@@ -65,6 +70,7 @@ public class FloorController {
         );
     }
 
+    @PreAuthorize("@roleSecurity.hasAnyRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable Long id
