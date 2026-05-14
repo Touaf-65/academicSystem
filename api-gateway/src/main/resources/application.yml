@@ -33,6 +33,11 @@ spring:
           predicates:
             - Path=/courses/**
 
+        - id: infrastructure-service
+          uri: lb://infrastructure-service
+          predicates:
+            - Path=/buildings/**,/floors/**,/rooms/**
+
 eureka:
   instance:
     prefer-ip-address: true
