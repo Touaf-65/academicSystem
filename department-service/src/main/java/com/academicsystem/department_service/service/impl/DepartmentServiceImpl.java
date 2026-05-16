@@ -4,43 +4,33 @@ import com.academicsystem.department_service.dto.CreateDepartmentRequest;
 import com.academicsystem.department_service.dto.DepartmentResponse;
 import com.academicsystem.department_service.entity.Department;
 import com.academicsystem.department_service.repository.DepartmentRepository;
+import com.academicsystem.department_service.repository.ProgramRepository;
 import com.academicsystem.department_service.service.DepartmentService;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class DepartmentServiceImpl
-        implements DepartmentService {
+public class DepartmentServiceImpl implements DepartmentService {
 
-    private final DepartmentRepository repository;
+    private final DepartmentRepository departmentRepository;
+    private final ProgramRepository programRepository;
 
     @Override
-    public DepartmentResponse create(
-            CreateDepartmentRequest request
-    ) {
+    public DepartmentResponse create(CreateDepartmentRequest request) {
+
+        if (departmentRepository.existsByNom(request.nom())) {
+            throw new RuntimeException("Department already exists");
+        }
 
         Department department = Department.builder()
                 .nom(request.nom())
                 .description(request.description())
                 .build();
 
-        Department saved = repository.save(department);
-
-        return map(saved);
-    }
-
-    @Override
-    public DepartmentResponse getById(Long id) {
-
-        Department department = repository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Department not found")
-                );
+        departmentRepository.save(department);
 
         return map(department);
     }
@@ -48,10 +38,16 @@ public class DepartmentServiceImpl
     @Override
     public List<DepartmentResponse> getAll() {
 
-        return repository.findAll()
+        return departmentRepository.findAll()
                 .stream()
                 .map(this::map)
                 .toList();
+    }
+
+    @Override
+    public DepartmentResponse getById(Long id) {
+
+        return map(findDepartment(id));
     }
 
     @Override
@@ -60,33 +56,41 @@ public class DepartmentServiceImpl
             CreateDepartmentRequest request
     ) {
 
-        Department department = repository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Department not found")
-                );
+        Department department = findDepartment(id);
 
         department.setNom(request.nom());
         department.setDescription(request.description());
 
-        Department updated = repository.save(department);
+        departmentRepository.save(department);
 
-        return map(updated);
+        return map(department);
     }
 
     @Override
     public void delete(Long id) {
 
-        repository.deleteById(id);
+        if (programRepository.existsByDepartmentId(id)) {
+            throw new RuntimeException(
+                    "Cannot delete department with programs"
+            );
+        }
+
+        departmentRepository.delete(findDepartment(id));
     }
 
-    private DepartmentResponse map(
-            Department department
-    ) {
+    private Department findDepartment(Long id) {
 
-        return new DepartmentResponse(
-                department.getId(),
-                department.getNom(),
-                department.getDescription()
-        );
+        return departmentRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Department not found"));
+    }
+
+    private DepartmentResponse map(Department department) {
+
+        return DepartmentResponse.builder()
+                .id(department.getId())
+                .nom(department.getNom())
+                .description(department.getDescription())
+                .build();
     }
 }

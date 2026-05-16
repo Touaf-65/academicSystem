@@ -3,10 +3,12 @@ package com.academicsystem.department_service.dto;
 import lombok.Builder;
 
 @Builder
-public record DepartmentResponse(
+public record AcademicLevelResponse(
 
         Long id,
         String nom,
-        String description
+        String code,
+        Integer ordre,
+        Long cycleId
 ) {
 }
