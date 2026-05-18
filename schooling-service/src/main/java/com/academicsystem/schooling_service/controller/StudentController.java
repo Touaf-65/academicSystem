@@ -4,6 +4,7 @@ import com.academicsystem.schooling_service.dto.*;
 import com.academicsystem.schooling_service.service.StudentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class StudentController {
 
     private final StudentService studentService;
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @PostMapping
     public StudentResponse create(
             @RequestBody
@@ -25,6 +27,7 @@ public class StudentController {
         return studentService.create(request);
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN', 'TEACHER')")
     @GetMapping("/{id}")
     public StudentResponse getById(
             @PathVariable Long id
@@ -33,12 +36,14 @@ public class StudentController {
         return studentService.getById(id);
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping
     public List<StudentResponse> getAll() {
 
         return studentService.getAll();
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @PutMapping("/{id}")
     public StudentResponse update(
             @PathVariable Long id,
@@ -50,6 +55,7 @@ public class StudentController {
         return studentService.update(id, request);
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public void delete(
             @PathVariable Long id
@@ -58,6 +64,7 @@ public class StudentController {
         studentService.delete(id);
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/department/{departmentId}")
     public List<StudentResponse> getByDepartment(
             @PathVariable Long departmentId
@@ -68,6 +75,7 @@ public class StudentController {
         );
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/program/{programId}")
     public List<StudentResponse> getByProgram(
             @PathVariable Long programId
@@ -78,6 +86,7 @@ public class StudentController {
         );
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/cycle/{cycleId}")
     public List<StudentResponse> getByCycle(
             @PathVariable Long cycleId
@@ -88,6 +97,7 @@ public class StudentController {
         );
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/level/{levelId}")
     public List<StudentResponse> getByLevel(
             @PathVariable Long levelId
@@ -98,6 +108,7 @@ public class StudentController {
         );
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/class/{classId}")
     public List<StudentResponse> getByClass(
             @PathVariable Long classId

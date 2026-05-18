@@ -4,6 +4,7 @@ import com.academicsystem.schooling_service.dto.*;
 import com.academicsystem.schooling_service.service.GroupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class GroupController {
 
     private final GroupService groupService;
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @PostMapping
     public GroupResponse create(
             @RequestBody
@@ -25,6 +27,7 @@ public class GroupController {
         return groupService.create(request);
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/{id}")
     public GroupResponse getById(
             @PathVariable Long id
@@ -33,12 +36,14 @@ public class GroupController {
         return groupService.getById(id);
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping
     public List<GroupResponse> getAll() {
 
         return groupService.getAll();
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @PutMapping("/{id}")
     public GroupResponse update(
             @PathVariable Long id,
@@ -50,6 +55,7 @@ public class GroupController {
         return groupService.update(id, request);
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public void delete(
             @PathVariable Long id
@@ -58,6 +64,7 @@ public class GroupController {
         groupService.delete(id);
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/class/{classId}")
     public List<GroupResponse> getByClass(
             @PathVariable Long classId
@@ -66,6 +73,7 @@ public class GroupController {
         return groupService.getByClass(classId);
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/level/{levelId}")
     public List<GroupResponse> getByLevel(
             @PathVariable Long levelId
@@ -74,6 +82,7 @@ public class GroupController {
         return groupService.getByLevel(levelId);
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/department/{departmentId}")
     public List<GroupResponse> getByDepartment(
             @PathVariable Long departmentId
@@ -84,6 +93,7 @@ public class GroupController {
         );
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @PostMapping("/{groupId}/students/{studentId}")
     public void addStudent(
             @PathVariable Long groupId,
@@ -96,6 +106,7 @@ public class GroupController {
         );
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @DeleteMapping("/{groupId}/students/{studentId}")
     public void removeStudent(
             @PathVariable Long groupId,

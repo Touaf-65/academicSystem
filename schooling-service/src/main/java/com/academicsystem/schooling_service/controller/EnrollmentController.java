@@ -5,6 +5,7 @@ import com.academicsystem.schooling_service.enums.EnrollmentStatus;
 import com.academicsystem.schooling_service.service.EnrollmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class EnrollmentController {
 
     private final EnrollmentService enrollmentService;
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @PostMapping
     public EnrollmentResponse create(
             @RequestBody
@@ -26,6 +28,7 @@ public class EnrollmentController {
         return enrollmentService.create(request);
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/{id}")
     public EnrollmentResponse getById(
             @PathVariable Long id
@@ -34,12 +37,14 @@ public class EnrollmentController {
         return enrollmentService.getById(id);
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping
     public List<EnrollmentResponse> getAll() {
 
         return enrollmentService.getAll();
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/student/{studentId}")
     public List<EnrollmentResponse> getByStudent(
             @PathVariable Long studentId
@@ -50,6 +55,7 @@ public class EnrollmentController {
         );
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/class/{classId}")
     public List<EnrollmentResponse> getByClass(
             @PathVariable Long classId
@@ -60,6 +66,7 @@ public class EnrollmentController {
         );
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/department/{departmentId}")
     public List<EnrollmentResponse> getByDepartment(
             @PathVariable Long departmentId
@@ -70,6 +77,7 @@ public class EnrollmentController {
         );
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/program/{programId}")
     public List<EnrollmentResponse> getByProgram(
             @PathVariable Long programId
@@ -80,6 +88,7 @@ public class EnrollmentController {
         );
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/cycle/{cycleId}")
     public List<EnrollmentResponse> getByCycle(
             @PathVariable Long cycleId
@@ -90,6 +99,7 @@ public class EnrollmentController {
         );
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @GetMapping("/level/{levelId}")
     public List<EnrollmentResponse> getByLevel(
             @PathVariable Long levelId
@@ -100,6 +110,7 @@ public class EnrollmentController {
         );
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @PatchMapping("/{id}/status")
     public EnrollmentResponse updateStatus(
             @PathVariable Long id,
@@ -112,6 +123,7 @@ public class EnrollmentController {
         );
     }
 
+    @PreAuthorize("@roleSecurity.hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public void delete(
             @PathVariable Long id
