@@ -21,7 +21,7 @@ spring:
         - id: department-service
           uri: lb://department-service
           predicates:
-            - Path=/departments/**
+            - Path=/departments/**, /programs/**, /cycles/**, /academic-levels/**, /classrooms/**
 
         - id: teacher-service
           uri: lb://teacher-service

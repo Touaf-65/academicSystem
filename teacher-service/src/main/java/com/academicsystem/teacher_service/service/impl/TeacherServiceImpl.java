@@ -33,9 +33,7 @@ public class TeacherServiceImpl
             CreateTeacherRequest request
     ) {
 
-        /*
-         * Validation départements
-         */
+
         if (request.departmentIds() != null) {
 
             request.departmentIds()
